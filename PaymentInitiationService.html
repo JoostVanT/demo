@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+   <html lang="en">
+   <head>  
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">    
+      <script src="./resources/Javascript/jquery-1.10.2.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="./resources/css/bootstrap.min.css">
+      <script src="./resources/Javascript/bootstrap.min.js"></script>
+      <link  rel="stylesheet" type="text/css" href="./resources/css/bootstrap-dialog.min.css">
+      <script src="./resources/Javascript/bootstrap-dialog.min.js"></script>
+      <script src="./resources/Javascript/Demo.js"></script>
+      <link rel="stylesheet" type="text/css" href="./resources/css/style.css">
+      <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+      
+      <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	</head>
+
+  	<body class="content">
+      <div class="mcf-page-wrapper">
+         <div class="mcf-content-wrapper">
+            <div class="mcf-personalspace">          
+               <div class="mcf-maincontent mcf-maincontent-leanbackward">
+				   <div><h1 class="headertitle">Payment Initiation Service</h1></div>           
+                  	<form class="pure-form pure-form-aligned" autocomplete="on" id="apiform">
+                     <fieldset>
+                        <div class="inputdetails">
+                          <h1 class="inputdetailstitle">Customer Details</h1>
+                           <div class="pure-control-group">
+                              <label for="CBID">Business Contact ID</label>
+                              <input type="text" style="width: 123px;" value="1111111" id="CBID" maxlength="7">
+                           </div>
+                        </div>
+                        <div class="inputdetails" style="margin-top:30px;">
+                           <h1 class="inputdetailstitle">TPP Details</h1>
+                           <div class="pure-control-group">
+                              <label for="TBID">TPP ID</label>
+                              <input type="text" id="TBID" value="1444567" style="width: 123px;" maxlength="7">
+                           </div>
+                           <div class="pure-control-group">
+                              <label for="TName">TPP Name</label>
+                              <select id="tname">
+                                 <option value="Flipkart">Flipkart</option>
+                                 <option value="Amazon">Amazon</option>
+                                 <option value="Bol.com">Bol.com</option>
+                                 <option value="Airtel">Airtel</option>
+                                 <option value="Vodafone">Vodafone</option>
+                                 <option value="Paytm">Paytm</option>
+                                 <option value="Google">Google</option>
+                                 <option value="Booking.com">Booking.com</option>
+                                 <option value="Apple">Apple</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div  class="inputdetails" style="margin-top:30px;">
+                          <h1 class="inputdetailstitle">Debtor Details</h1>
+                           <div class="pure-control-group">
+                              <label for="amount">Amount</label>
+                              <input type="text" value="100" style="width: 153px;" id="amount">
+                              <select  id="cur">
+                                 <option value="euro">&#128;</option>
+                                 <option value="$">$</option>
+                                 <option value="Others">Others</option>
+                              </select>
+                           </div>
+                           <div class="pure-control-group">
+                              <label for="dname">Debtor Name</label>
+                              <input type="text" id="dname" value="Vipra" style="width: 245px;">
+                           </div>
+                           <div class="pure-control-group">
+                              <label for="dIBAN">IBAN</label>
+                              <input type="text" maxlength="4" id="dIBAN1" value="NL06" style="width: 55px;">
+                              <select id="dIBAN2" style="width: 82px;">
+                                 <option value="ABNA">ABNA</option>
+                              </select>
+                              <input type="text" maxlength="10" id="dIBAN3"  value="1234567890" style="width: 100px;">
+                           </div>
+                           <div class="pure-control-group">
+                              <label for="desc">Description</label>
+                              <input type="text" value="Bill Payment initiated" id="desc" style="width: 245px;">
+                           </div>
+                           <div class="pure-control-group">
+                              <label for="eid">End to End ID</label>
+                              <input type="text" id="eid"  value="Bill Ref.Inf123" style="width: 245px;">
+                           </div>
+                          <h1 class="inputdetailstitle">Creditor Details</h1>
+                           <div class="pure-control-group">
+                              <label for="cname">Creditor Name</label>
+                              <input type="text" id="cname" value="Siddhesh" style="width: 245px;">
+                           </div>
+                           <div class="pure-control-group">
+                              <label for="cIBAN">IBAN</label>
+                              <input type="text" maxlength="4" id="cIBAN1" value="NL06" style="width: 55px;">
+                              <select  id="cIBAN2" style="width: 82px;">
+                                 <option value="ABNA">ABNA</option>
+                                 <option value="INGB">INGB</option>
+                                 <option value="RABO">RABO</option>
+                                 <option value="SNSB">SNSB</option>
+                              </select>
+                              <input type="text" maxlength="10" id="cIBAN3" value="2345678901" style="width: 100px;">
+                           </div>
+                        </div>
+                        <div class="pure-control-group">
+                           <input type="button"  
+                              class="inputdetailsbutton" id="create"onclick="getPainRequest()" value="Create Pain">
+                        </div>
+                     </fieldset>
+                  </form>
+                  
+                  <div id="resp"></div>
+               </div>
+               <div id="sendbtn" class="pure-control-group">
+               </div>
+               <div class="modal fade">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header" style="background-color: #009286;">
+                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+                           <h4 class="modal-title">Modal title</h4>
+                        </div>
+                        <div class="modal-body">
+                           <p>One fine body�</p>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                           <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                     </div>
+                     <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+               </div>
+               <!-- /.modal -->
+            </div>
+         </div>
+      </div>
+      <div class="pageheaderwrapper" >
+		<div class="pageheader">
+			<a class="logo"><img height=98px; alt="Startpagina Personal"  src="./resources/images/logo.png">	</a>
+			<div class="mcf-nav mcf-nav-main">				
+				<ul>
+					<li><a href="./PaymentInitiationService.html">PIS</a></li>
+					<li><a href="./AccountInformationService.html">AIS</a></li>
+					<li><a href="./CheckAvailabilityOfFundsService.html">CAF</a></li>
+					<li><a href="./authflow.html">AUTHENTICATE</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="brandbar"></div>
+	<div class="mcf-footer">
+		<div class="mcf-footer-wrapper">
+			<p class="mcf-copyright">&copy; DEMO</p>
+		</div>
+	</div>
+   </body>
+</html>

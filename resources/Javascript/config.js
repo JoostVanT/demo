@@ -1,0 +1,1 @@
+var localUrl = "http://10.21.197.78:9080/BAI562_RestWeb/";
