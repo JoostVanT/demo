@@ -28,7 +28,7 @@
          <div class="mcf-content-wrapper">
             <div class="mcf-personalspace">          
                <div class="mcf-maincontent-leanbackward" style="width: 1100px;">
-				   <div><h1 class="headertitle">Account Information Service></h1></div>
+				   <div><h1 class="headertitle">Account Information Service</h1></div>
                   	<form class="pure-form pure-form-aligned" autocomplete="on" id="apiform">
                      <fieldset> 
                      <table style="width:100%">
@@ -53,7 +53,7 @@
                               	<option value="INP" id="INP">InProgress transactions</option>
                               	<option value="REJ" id="REJ">Rejected transactions</option>
                                  <option value="BKF" id="BKF">Booked mutations(CAMT 53)</option>
-                                 <option value="BKU" id="BKU">Booked mutations(Unformatted)</option>
+                                 <option value="BKU" id="BKU" selected>Booked mutations(Unformatted)</option>
                               </select>
                            </div>
 						    <div class="pure-control-group">
@@ -81,45 +81,50 @@
                     
                         </td>
                         <td>
-                        <div class="inputdetails">
-                           <h1 class="inputdetailstitle">Token</h1>
+                           <div class="inputdetails">
+                              <h1 class="inputdetailstitle">Token</h1>
                               
-						     <div class="pure-control-group" align="center">
-								<input type="search" style="height: 207px;width: 448px;word-break: break-word;color: black;" id="token">
-                           </div>
-                            
-                        </div> 
+						            <div class="pure-control-group" align="center">
+								          <input type="search" 
+                                         style="height: 207px;width: 448px;word-break: break-word;color: black;" 
+                                         id="token">
+                              </div>
+                           </div> 
                         </td>
-                        </table>                   
+                     </table>                   
                     </fieldset>      
                   </form>
                 
                   <div id="resp"></div>
                   <pre id="json"></pre>
                </div>
-               <div id="sendbtn" class="pure-control-group">
-               </div>
- 				<div class="modal fade">
+               <div id="sendbtn" class="pure-control-group"></div>
+               <div class="modal fade">
                   <div class="modal-dialog">
                      <div class="modal-content">
                         <div class="modal-header" style="background-color: #009286;">
-                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">?</button>
+                           <button type="button" 
+                                   class="close" 
+                                   data-dismiss="modal" 
+                                   aria-hidden="true">?</button>
                            <h4 class="modal-title">Modal title</h4>
                         </div>
                         <div class="modal-body">
                            <p>One fine body</p>
                         </div>
                         <div class="modal-footer">
-                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                           <button type="button" class="btn btn-primary">Save changes</button>
+                           <button type="button" 
+                                   class="btn btn-default" 
+                                   data-dismiss="modal">Close</button>
+                           <button type="button" 
+                                   class="btn btn-primary">Save changes</button>
                         </div>
                      </div>
                      <!-- /.modal-content -->
                   </div>
                   <!-- /.modal-dialog -->
                </div>
-              <div id="pgbtn" class="pure-control-group">
-              </div>              
+              <div id="pgbtn" class="pure-control-group"></div>              
             </div>
          </div>
       </div>

@@ -40,7 +40,8 @@ function fetchDetails(service){
 				var msg="Unable to retrieve account information due to restrictions";
 				//var url = "http://10.21.197.78:9080/BAI560_RestWeb/ais/formatted?accountNumber=NL02ABNA0222034300&startDate=2014-06-01&endDate=2015-10-01&tppId=77";
 				//var url = "http://10.21.197.78:9080/BAI560_RestWeb/ais/formattedxml?accountNumber="+ accountNumber + "&startDate=" + formatStartDate + "&endDate=" + formatEndDate+ "&tppId=AAB"+tppId+"&grantLevel=CC";
-				var url = "http://s07ast0012-c05.nl.eu.abnamro.com:9997/xs2a/accountinformation/formattedxml?accountNumber="+ accountNumber + "&startDate=" + formatStartDate + "&endDate=" + formatEndDate;
+				//var url = "http://s07ast0012-c05.eu.abnamro.com:9997/xs2a/accountinformation/formattedxml?accountNumber="+ accountNumber + "&startDate=" + formatStartDate + "&endDate=" + formatEndDate;
+				var url = "http://www-et2.abnamro.nl/xs2a/accountinformation/camt053reports/v1?accountNumber="+ accountNumber + "&bookDateFrom=" + formatStartDate + "&bookDateTo=" + formatEndDate;
 				$.ajax({
 					headers: {
 						'Content-Type': "application/json",
@@ -65,7 +66,10 @@ function fetchDetails(service){
 					error: function(data) {
 						if(data != null){
 							var message = JSON.parse(data.responseText);
-							var msg=message.messages[0].messageKey;
+							var msg = message.messages[0].messageKey + 
+								' - ' + message.messages[0].messageType +
+								' - ' + message.messages[0].messageText +
+								'  (' + data.status + ') ';
 							errorHandling("Response", msg);
 						}
 
@@ -75,13 +79,17 @@ function fetchDetails(service){
 				});
 			}
 			else{
-				if(code=="BKU")
-				var urlLink="http://10.21.197.78:9080/BAI560_RestWeb/ais/mutations";
-				else if(code=="REJ"||code=="INP"||code=="SCH")
-				var urlLink="http://10.21.197.78:9080/BAI560_RestWeb/ais/transactions";
-				var type='POST';
-				var data=JSON.stringify(accntinfo);
-				apiCall(urlLink,type,data);
+				if(code=="BKU"){
+					var urlLink="http://www-et2.abnamro.nl/xs2a/accountinformation/transactions/v1";
+					urlLink = urlLink + "?accountNumber=NL02ABNA0545791006";
+					var type='GET';
+				}
+				else if(code=="REJ"||code=="INP"||code=="SCH") {
+					var urlLink="http://10.21.197.78:9080/BAI560_RestWeb/ais/transactions";
+					var type='POST';
+					var data=JSON.stringify(accntinfo);
+				}
+				apiCall(urlLink, type, data, token);
 			}
 
 		}
@@ -90,30 +98,32 @@ function fetchDetails(service){
 			//var urlLink="http://localhost:9081/TPAdminRestLayer/rest/tpp";
 			var type='GET';
 			var data="";
-			apiCall(urlLink,type,data);
+			apiCall(urlLink, type, data, token);
 		}
-		function apiCall(urlLink,type,data) {
+		function apiCall(urlLink, type, data, token) {
 			var acceptTypeReq="application/json";
 			var dataTypeReq="json";
 			var msg="Unable to retrieve account information due to restrictions";
+			var bearerToken = "Bearer " + token;
+			console.log("Using token: ", bearerToken);
 			var dialogInstance1 = new BootstrapDialog({
-
 				message: msg
 			});
+
 			$.ajax({
-				headers: {
-					'Accept': acceptTypeReq,
-					'Content-Type': "application/json"
-				},
-				//url: 'http://10.21.197.78:9080/TestRest/Test/users?',
-				//url:'http://10.21.197.78:9080/SpringTestRest/rest/users?access_token='+accessToken,
-				//url:'http://localhost:9081/AISRestTransferLayer/rest/users?accountNumber='+accountNumber,
+				 //headers: {
+				 //	"Accept": acceptTypeReq
+					//"Authorization": bearerToken
+				//},
 				url: urlLink,
-				//type:'POST',
 				type: type,
-				data: data,
-				dataType: dataTypeReq,
+				//data: data,
+				//dataType: dataTypeReq,
+				beforeSend: function(xhr) { 
+					xhr.setRequestHeader('Authorization', bearerToken ); 
+				},
 				success: function(data) {
+					console.log("success");
 					if(data == null || data.length==0){
 						var msg="No Records found!!";
 						var dialogInstance1 = new BootstrapDialog({
@@ -123,16 +133,15 @@ function fetchDetails(service){
 						setTimeout(function(){ dialogInstance1.open(); }, 20);
 					}
 					else
-					iterateData(data,dataTypeReq,service);
+					iterateData(data, dataTypeReq, service);
 				},
 				error: function(data) {
-
+					console.log("error");
+					console.log("Data: ", data);
 					if(data.responseJSON != null){
 						var msg=data.responseJSON.messages[0].messageKey;
 						errorHandling("Response", msg);
 					}
-
-
 				}
 			});
 		}
@@ -188,7 +197,7 @@ function fetchDetails(service){
 			}
 
 		}
-		function iterateData(responsetxt,dataTypeReq,service){
+		function iterateData(responsetxt, dataTypeReq, service){
 			if(responsetxt==null || responsetxt.length==0){
 				var msg="No Records found!!";
 				var dialogInstance1 = new BootstrapDialog({
@@ -244,27 +253,47 @@ function fetchDetails(service){
 				else{
 					 if(code=="BKU")
 					 {
-						customers.push(["Mutation Code","Book Date","Value Date","Currency Code","Amount","Balance After Transaction","Description","Name Counter Account","Counter Account Number","Transaction Date","Source Enquiry Number"]);
+						customers.push(["Mutation Code",
+							            "Book Date",
+							            "Value Date",
+							            "Currency Code",
+							            "Amount",
+							            "Balance After Transaction",
+							      //      "Description",
+							            "Name Counter Account",
+							            "Counter Account Number",
+							            //"Transaction Date",
+							            "Source Enquiry Number"]);
 						if(responsetxt.length>0){
-
-							$.each(responsetxt,function(k,v) {
-								//$.each(this, function(k,v) {
-									var bookDate=v["bookDate"];
-									var amount=v["amount"];
-									var valueDate=v["valueDate"];
-									var balanceAfterTransaction=v["balanceAfterTransaction"];
-									var transactionDate=v["transactionDate"];
-									//var counterAccountNumberType=v["counterAccountNumberType"];
-									balanceAfterTransaction=parseFloat(balanceAfterTransaction, 10).toFixed(2).replace(".",",");
-									amount=parseFloat(amount, 10).toFixed(2).replace(".",",");
-									var bookDt = new Date(bookDate);
-									var bookFormatDt = bookDt.getDate() + "/" + (bookDt.getMonth() + 1)  + "/" + bookDt.getFullYear();
-									var valueDt = new Date(valueDate);
-									var valFormatdt = valueDt.getDate() + "/" + (valueDt.getMonth() + 1) + "/" + valueDt.getFullYear();
-									var transactionDt = new Date(transactionDate);
-									var tranFormatDt = transactionDt.getDate() + "/" + (transactionDt.getMonth() + 1) + "/" + transactionDt.getFullYear();
-									customers.push([v["mutationCode"],bookFormatDt,valFormatdt,v["currencyCode"],amount,balanceAfterTransaction,v["description"],v["nameCounterAccount"],v["counterAccountNumber"],tranFormatDt,v["sourceInquiryNumber"]]);
-								//});
+							var rspJSON = JSON.parse(responsetxt);
+							console.log('responsetxt: ', rspJSON.transactionsList.transactions);
+							rspJSON.transactionsList.transactions.forEach(function(item, index){
+								//$.each(responsetxt,function(k,v) {
+								var bookDate=item.transaction["bookDate"];
+								var amount=item.transaction["amount"];
+								var valueDate=item.transaction["valueDate"];
+								var balanceAfterMutation=item.transaction["balanceAfterMutation"];
+								//var transactionDate=v["transactionDate"];
+								//var counterAccountNumberType=v["counterAccountNumberType"];
+								balanceAfterMutation=parseFloat(balanceAfterMutation, 10).toFixed(2).replace(".",",");
+								amount=parseFloat(amount, 10).toFixed(2).replace(".",",");
+								var bookDt = new Date(bookDate);
+								var bookFormatDt = bookDt.getDate() + "/" + (bookDt.getMonth() + 1)  + "/" + bookDt.getFullYear();
+								var valueDt = new Date(valueDate);
+								var valFormatdt = valueDt.getDate() + "/" + (valueDt.getMonth() + 1) + "/" + valueDt.getFullYear();
+								// var transactionDt = new Date(transactionDate);
+								// var tranFormatDt = transactionDt.getDate() + "/" + (transactionDt.getMonth() + 1) + "/" + transactionDt.getFullYear();
+								customers.push([item.transaction["mutationCode"],
+									bookFormatDt,
+									valFormatdt,
+									item.transaction["currency"],
+									amount,
+									balanceAfterMutation,
+								//	item.transaction["description"],
+									item.transaction["counterPartyName"],
+									item.transaction["counterPartyAccountNumber"],
+								//	tranFormatDt,
+									item.transaction["accountServicerReference"]]);
 							});
 						}
 						/*else{
@@ -645,7 +674,7 @@ function errorHandling(title, message) {
 	}else if("RMV_TKN" == message){
 		message = "Token is removed from local storage";
 	}else{
-		message = "Technical error";
+		message = message + "!";
 	}
 	var dialogInstance1 = new BootstrapDialog({
 		title:title,
