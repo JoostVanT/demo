@@ -81,7 +81,13 @@ function fetchDetails(service){
 			else{
 				if(code=="BKU"){
 					var urlLink="http://www-et2.abnamro.nl/xs2a/accountinformation/transactions/v1";
-					urlLink = urlLink + "?accountNumber=NL02ABNA0545791006";
+					urlLink = urlLink + "?accountNumber="+ accountNumber;
+					if (formatStartDate != "") {
+						urlLink = urlLink + "&bookDateFrom=" + formatStartDate;
+					} 
+					if (formatEndDate != "") {
+						urlLink = urlLink +  "&bookDateTo=" + formatEndDate;
+					}
 					var type='GET';
 				}
 				else if(code=="REJ"||code=="INP"||code=="SCH") {
