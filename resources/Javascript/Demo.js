@@ -707,7 +707,7 @@ function getAccessToken(){
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
 			//url: "https://nllipidcs37045.nl.eu.abnamro.com:9032/as/token.oauth2",
-			url: "http://localhost:39112/tsydntk",
+			url: "http://www.apibank.xyz:39112/tsydntk",
 			type:"POST",
 			data: clientData,
 			dataType: "json",
@@ -733,7 +733,7 @@ function getAccessToken(){
 				document.getElementById("tokenData").innerHTML="<b>"+tokenProp[0].replace("{","")+"</b> </br> <b>"+tknExp+"</b> </br> <b>" + tokenProp[2].substr(0,11).replace("[","") +"</b>";
 
 				localStorage.setItem("accessToken", bearerToken);
-				localStorage.setItem("tokenProp", "<b>"+tokenProp[0].replace("{","")+"</b> </br> <b>"+tknExp+"</b> </br> <b>" + tokenProp[2].substr(0,11).replace("[","") +"</b>");
+				localStorage.setItem("tokenProp", "");
 				localStorage.setItem("clientId", clientId);
 
 			},
