@@ -730,7 +730,7 @@ function getAccessToken(){
 				document.getElementById("showToken").style.border = "2px solid";
 				document.getElementById("showToken").innerHTML=bearerToken;
 				document.getElementById("tokenData").style.border = "2px solid";
-				document.getElementById("tokenData").innerHTML="<b>"+tokenProp[0].replace("{","")+"</b> </br> <b>"+tknExp+"</b> </br> <b>" + tokenProp[2].substr(0,11).replace("[","") +"</b>";
+				//document.getElementById("tokenData").innerHTML="<b>"+tokenProp[0].replace("{","")+"</b> </br> <b>"+tknExp+"</b> </br> <b>" + tokenProp[2].substr(0,11).replace("[","") +"</b>";
 
 				localStorage.setItem("accessToken", bearerToken);
 				localStorage.setItem("tokenProp", "");
