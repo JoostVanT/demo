@@ -38,9 +38,6 @@ function fetchDetails(service){
 			}
 			else if(code=="BKF"){
 				var msg="Unable to retrieve account information due to restrictions";
-				//var url = "http://10.21.197.78:9080/BAI560_RestWeb/ais/formatted?accountNumber=NL02ABNA0222034300&startDate=2014-06-01&endDate=2015-10-01&tppId=77";
-				//var url = "http://10.21.197.78:9080/BAI560_RestWeb/ais/formattedxml?accountNumber="+ accountNumber + "&startDate=" + formatStartDate + "&endDate=" + formatEndDate+ "&tppId=AAB"+tppId+"&grantLevel=CC";
-				//var url = "http://s07ast0012-c05.eu.abnamro.com:9997/xs2a/accountinformation/formattedxml?accountNumber="+ accountNumber + "&startDate=" + formatStartDate + "&endDate=" + formatEndDate;
 				var url = "http://www-et2.abnamro.nl/xs2a/accountinformation/camt053reports/v1?accountNumber="+ accountNumber + "&bookDateFrom=" + formatStartDate + "&bookDateTo=" + formatEndDate;
 				$.ajax({
 					headers: {
@@ -709,24 +706,26 @@ function getAccessToken(){
 				"Accept": "application/json",
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
-			url: "https://nllipidcs37045.nl.eu.abnamro.com:9032/as/token.oauth2",
+			//url: "https://nllipidcs37045.nl.eu.abnamro.com:9032/as/token.oauth2",
+			url: "http://localhost:39112/tsydntk",
 			type:"POST",
 			data: clientData,
 			dataType: "json",
 			success: function(data) {
 
 				var bearerToken = data.access_token;
-				var decondedOutput = decode64(bearerToken.substr(bearerToken.indexOf(".")+1, bearerToken.lastIndexOf(".")));
-				var tokenProp = decondedOutput.split(",");
-				var epcProp = tokenProp[1].split(":");
+				console.log("data fetched");
+				// var decondedOutput = decode64(bearerToken.substr(bearerToken.indexOf(".")+1, bearerToken.lastIndexOf(".")));
+				// var tokenProp = decondedOutput.split(",");
+				// var epcProp = tokenProp[1].split(":");
 
-				var dat = new Date(epcProp[1]*1000);
+				// var dat = new Date(epcProp[1]*1000);
 
-				var date = dat.getDate() + '-' +  (dat.getMonth() + 1) + '-' +  dat.getFullYear() + " "+dat.getHours()+":"+dat.getMinutes()+":"+dat.getSeconds();
+				// var date = dat.getDate() + '-' +  (dat.getMonth() + 1) + '-' +  dat.getFullYear() + " "+dat.getHours()+":"+dat.getMinutes()+":"+dat.getSeconds();
 
 
 
-				var tknExp = epcProp[0]+":"+date;
+				// var tknExp = epcProp[0]+":"+date;
 
 				document.getElementById("showToken").style.border = "2px solid";
 				document.getElementById("showToken").innerHTML=bearerToken;
@@ -738,7 +737,9 @@ function getAccessToken(){
 				localStorage.setItem("clientId", clientId);
 
 			},
-			error: function(data) {
+			error: function(data, status, err) {
+				console.log("error: ", status, data);
+				console.log("err: ", err)
 				if(data.responseJSON != null){
 
 					document.getElementById("showToken").style.border = "";
@@ -755,6 +756,7 @@ function getAccessToken(){
 		});
 	}
 	else{
+		console.log('Nothing fetched from internal storage');
 		document.getElementById("showToken").style.border = "2px solid";
 		document.getElementById("showToken").innerHTML=localStorage.getItem("accessToken");
 		document.getElementById("tokenData").style.border = "2px solid";
