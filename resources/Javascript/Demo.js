@@ -77,7 +77,8 @@ function fetchDetails(service){
 			}
 			else{
 				if(code=="BKU"){
-					var urlLink="http://www-et2.abnamro.nl/xs2a/accountinformation/transactions/v1";
+					//var urlLink="http://www-et2.abnamro.nl/xs2a/accountinformation/transactions/v1";
+					var urlLink="http://www-pr1.abnamro.nl/xs2a/accountinformation/transactions/v1";
 					urlLink = urlLink + "?accountNumber="+ accountNumber;
 					if (formatStartDate != "") {
 						urlLink = urlLink + "&bookDateFrom=" + formatStartDate;
